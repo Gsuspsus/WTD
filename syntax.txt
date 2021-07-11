@@ -1,0 +1,9 @@
+Statement = operator | if | variable declaration
+Expression = Value | Function-call 
+Value = string | int | float | bool | List
+List = '[' Value* ']'
+Operator = Write Value | Read Ident
+If = if expression then statement (else statement)?
+Function-call = Ident '(' Value* ')'
+Variable declaration = Ident '=' expression
+Ident = 'a-z'+('-_'*'a-z'*)*
