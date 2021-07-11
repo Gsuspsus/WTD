@@ -13,18 +13,34 @@ module Lexing
 
   # Handles converting a string into a list of tokens
   class Lexer
+    INVALID_LEXING_ERROR = 'Unlexable element: "%s"'
+
     def initialize(rules)
       @rules = rules
+      @current_chunk = nil
     end
 
     def tokenize(str)
       tokens = []
       str.downcase.split.each do |chunk|
-        puts '' if @rules.none? { |r| chunk.match(r[0]) }
-        matching_rule = @rules.find { |regex, _| chunk.match(regex) }
+        @current_chunk = chunk
+        print_unlexable_error if is_invalid_chunk?
+        matching_rule = find_matching_rule
         tokens << Token.new(matching_rule[1].to_sym, chunk)
       end
       tokens
+    end
+
+    def print_unlexable_error
+      raise ArgumentError.new(INVALID_LEXING_ERROR % @current_chunk)
+    end
+
+    def is_invalid_chunk?
+      @rules.none? { |r| @current_chunk.match(r[0]) }
+    end
+
+    def find_matching_rule
+      @rules.find { |regex, _| @current_chunk.match(regex) }
     end
   end
 end
