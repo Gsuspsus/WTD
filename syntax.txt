@@ -1,3 +1,7 @@
+Language is case insensitive
+
+Program = Line*
+Line = Statement+ | Expression+
 Statement = operator | if | variable declaration
 Expression = Value | Function-call 
 Value = string | int | float | bool | List
@@ -5,5 +9,5 @@ List = '[' Value* ']'
 Operator = Write Value | Read Ident
 If = if expression then statement (else statement)?
 Function-call = Ident '(' Value* ')'
-Variable declaration = Ident '=' expression
+Variable declaration = Ident '=' expression ',' (string | int | float | bool | List)
 Ident = 'a-z'+('-_'*'a-z'*)*
