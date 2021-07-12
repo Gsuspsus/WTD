@@ -28,7 +28,7 @@ module Lexing
         matching_rule = find_matching_rule
         tokens << Token.new(matching_rule[1], chunk)
       end
-      return TokenStream.new(tokens)
+      TokenStream.new(tokens)
     end
 
     def print_unlexable_error
@@ -36,7 +36,7 @@ module Lexing
     end
 
     def invalid_chunk?
-      find_matching_rule == nil
+      find_matching_rule.nil?
     end
 
     def find_matching_rule
@@ -45,39 +45,41 @@ module Lexing
   end
 end
 
-class TokenStream 
-	attr_reader :tokens
+# A class for a collection of tokens to be passed to the parser
+class TokenStream
+  attr_reader :tokens
 
-	def initialize(tokens)
-		@@tokens = tokens
-		@index = 0
-	end
+  def initialize(tokens)
+    @tokens = tokens
+    @index = 0
+  end
 
-	def current
-		@@tokens[@index]
-	end
+  def current
+    @tokens[@index]
+  end
 
-	def peek(n)
-		@@tokens[@index+n]
-	end
+  def peek(length)
+    @tokens[@index + length]
+  end
 
-	def next_token
-		@index += 1
-	end
+  def next_token
+    @index += 1
+  end
 
-	def expect(t)
-		if t != current.type 
-			puts "unexpected token, expected #{t.to_s} but got #{current.type.to_s}" 
-			return false
-		else
-			return true
-		end
-	end
-	def next_if_expected(t)
-		next_token if expect(t)
-	end
+  def expect(type)
+    if type != current.type
+      puts "unexpected token, expected #{type} but got #{current.type}"
+      false
+    else
+      true
+    end
+  end
+
+  def next_if_expected(type)
+    next_token if expect(type)
+  end
 
   def inspect
-    pp @@tokens and nil
+    pp @tokens and nil
   end
 end
