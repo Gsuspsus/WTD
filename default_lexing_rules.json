@@ -1,10 +1,14 @@
 {
-  "[a-z]+([-_]+[a-z]+)*": "identifier",
+  "['\"](\\w+)['\"]": "string",
   "\\d+(?:\\.\\d+)": "float",
   "\\d+": "int",
-  "['\"](\\w+)['\"]": "string",
+  "true": "bool",
+  "false": "bool",
+  "[a-z]+([-_]+[a-z]+)*": "identifier",
   "[(]": "lparen",
   "[)]": "rparen",
+  "[\\[]": "lbrack",
+  "[\\]]": "rbrack",
   "[=]": "eq",
   "[,]": "comma"
 }
