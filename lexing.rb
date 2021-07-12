@@ -24,18 +24,18 @@ module Lexing
       tokens = []
       str.downcase.split.each do |chunk|
         @current_chunk = chunk
-        print_unlexable_error if is_invalid_chunk?
+        print_unlexable_error if invalid_chunk?
         matching_rule = find_matching_rule
-        tokens << Token.new(matching_rule[1].to_sym, chunk)
+        tokens << Token.new(matching_rule[1], chunk)
       end
       tokens
     end
 
     def print_unlexable_error
-      raise ArgumentError.new(INVALID_LEXING_ERROR % @current_chunk)
+      raise ArgumentError, INVALID_LEXING_ERROR % @current_chunk
     end
 
-    def is_invalid_chunk?
+    def invalid_chunk?
       @rules.none? { |r| @current_chunk.match(r[0]) }
     end
 
