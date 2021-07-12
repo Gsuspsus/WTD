@@ -22,7 +22,7 @@ module Lexing
 
     def tokenize(str)
       tokens = []
-      str.downcase.split.each do |chunk|
+      str.downcase.gsub(/([()])/, ' \1 ').split.each do |chunk|
         @current_chunk = chunk
         print_unlexable_error if invalid_chunk?
         matching_rule = find_matching_rule
