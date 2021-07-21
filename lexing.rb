@@ -26,7 +26,7 @@ module Lexing
         @current_chunk = chunk
         print_unlexable_error if invalid_chunk?
         matching_rule = find_matching_rule
-        tokens << Token.new(matching_rule[1], chunk)
+        tokens << Token.new(matching_rule.type, chunk)
       end
       TokenStream.new(tokens)
     end
@@ -44,7 +44,7 @@ module Lexing
     end
 
     def find_matching_rule
-      @rules.find { |regex, _| @current_chunk.match(regex) }
+      @rules.find { |rule| @current_chunk.match(rule.regex) }
     end
   end
 end
