@@ -1,1 +1,0 @@
-LexerRule = Struct.new(:regex, :type)
