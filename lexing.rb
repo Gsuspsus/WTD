@@ -1,13 +1,26 @@
 # frozen_string_literal: true
 
 module Lexing
+
+  CONVERTERS = {
+    :int => ->x{x.to_i},
+    :float => ->x{x.to_f},
+    :bool => ->x{x=="true"},
+  }.freeze
+
+  DEFAULT_CONVERTER = ->x{x.to_s}
+
   # Represents the basic syntactical unit in the language
   class Token
     attr_reader :type, :value
 
     def initialize(type, value)
       @type = type.to_sym
-      @value = value.to_s
+      if block_given?
+        @value = yield(@type,value)
+      else
+        @value = value.to_s
+      end
     end
   end
 
@@ -25,9 +38,11 @@ module Lexing
         @current_chunk = chunk
         print_unlexable_error if invalid_chunk?
         matching_rule = find_matching_rule
-        Token.new(matching_rule.type, chunk)
+        Token.new(matching_rule.type, chunk) do |type,value|
+          CONVERTERS.fetch(type,DEFAULT_CONVERTER).call(value)
+        end
       end
-      TokenStream.new(tokens)
+      TokenStream.new(tokens.map)
     end
 
     def prepare_string(str)
