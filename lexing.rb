@@ -6,8 +6,8 @@ module Lexing
     attr_reader :type, :value
 
     def initialize(type, value)
-      @type = type
-      @value = value
+      @type = type.to_sym
+      @value = value.to_s
     end
   end
 
@@ -16,19 +16,23 @@ module Lexing
     INVALID_LEXING_ERROR = 'Unlexable element: "%s"'
 
     def initialize(rules)
-      @rules = rules
+      @rules = Array(rules)
       @current_chunk = nil
     end
 
     def tokenize(str)
       tokens = []
-      str.downcase.gsub(/([()\[\],=])/, ' \1 ').split.each do |chunk|
+      prepare_string(str).split.each do |chunk|
         @current_chunk = chunk
         print_unlexable_error if invalid_chunk?
         matching_rule = find_matching_rule
         tokens << Token.new(matching_rule[1], chunk)
       end
       TokenStream.new(tokens)
+    end
+
+    def prepare_string(str)
+      str.downcase.gsub(/([()\[\],=])/, ' \1 ')
     end
 
     def print_unlexable_error
@@ -50,7 +54,7 @@ class TokenStream
   attr_reader :tokens
 
   def initialize(tokens)
-    @tokens = tokens
+    @tokens = Array(tokens)
     @index = 0
   end
 
