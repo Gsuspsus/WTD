@@ -35,7 +35,7 @@ module Lexing
     end
 
     def print_unlexable_error
-      rahttps://github.com/Gsuspsus/WTD.gitise ArgumentError, INVALID_LEXING_ERROR % @current_chunk
+      raise ArgumentError, INVALID_LEXING_ERROR % @current_chunk
     end
 
     def invalid_chunk?
