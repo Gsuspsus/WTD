@@ -21,12 +21,11 @@ module Lexing
     end
 
     def tokenize(str)
-      tokens = []
-      prepare_string(str).split.each do |chunk|
+      tokens = prepare_string(str).split.map do |chunk|
         @current_chunk = chunk
         print_unlexable_error if invalid_chunk?
         matching_rule = find_matching_rule
-        tokens << Token.new(matching_rule.type, chunk)
+        Token.new(matching_rule.type, chunk)
       end
       TokenStream.new(tokens)
     end
@@ -36,7 +35,7 @@ module Lexing
     end
 
     def print_unlexable_error
-      raise ArgumentError, INVALID_LEXING_ERROR % @current_chunk
+      rahttps://github.com/Gsuspsus/WTD.gitise ArgumentError, INVALID_LEXING_ERROR % @current_chunk
     end
 
     def invalid_chunk?
