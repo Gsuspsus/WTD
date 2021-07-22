@@ -4,7 +4,8 @@ module Lexing
   CONVERTERS = {
     int: ->(x) { x.to_i },
     float: ->(x) { x.to_f },
-    bool: ->(x) { x == 'true' }
+    bool: ->(x) { x == 'true' },
+    string: ->(x) { x.gsub(/"(\w*)"/, '\1') }
   }.freeze
 
   DEFAULT_CONVERTER = ->(x) { x.to_s }
@@ -35,21 +36,22 @@ module Lexing
     def tokenize(str)
       tokens = prepare_string(str).split.map do |chunk|
         @current_chunk = chunk
-        print_unlexable_error if invalid_chunk?
-        matching_rule = find_matching_rule
-        Token.new(matching_rule.type, chunk) do |type, value|
+        unlexable_error_abort if invalid_chunk?
+        Token.new(find_matching_rule.type, chunk) do |type, value|
           CONVERTERS.fetch(type, DEFAULT_CONVERTER).call(value)
         end
       end
-      TokenStream.new(tokens.map)
+      TokenStream.new(tokens)
     end
+
+    private
 
     def prepare_string(str)
       str.downcase.gsub(/([()\[\],=])/, ' \1 ')
     end
 
-    def print_unlexable_error
-      raise ArgumentError, INVALID_LEXING_ERROR % @current_chunk
+    def unlexable_error_abort
+      raise ArgumentError, format(INVALID_LEXING_ERROR,@current_chunk)
     end
 
     def invalid_chunk?
